@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' https://unpkg.com;
+        style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' https://*.basemaps.cartocdn.com https://*.openstreetmap.org data: blob:;
+        connect-src 'self' https://nominatim.openstreetmap.org;
+    ">
+    <meta name="description" content="Interactive historical map of Brooklyn Catholic parishes from 1822 to present">
+    <title>Brooklyn Catholic Parishes Timeline</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" 
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="anonymous" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Application CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header role="banner">
+            <h1>Brooklyn Catholic Parishes</h1>
+            <p class="subtitle">Interactive Historical Map • Kings County, NY • 1822–Present</p>
+        </header>
+        
+        <div class="main-content">
+            <aside class="sidebar" role="complementary" aria-label="Search and filters">
+                <!-- Search Section -->
+                <div class="search-section">
+                    <div class="search-title" id="search-label">Search</div>
+                    
+                    <!-- Parish Search -->
+                    <div class="search-container">
+                        <label for="parish-search" class="visually-hidden">Search parishes by name</label>
+                        <input type="text" 
+                               class="search-input" 
+                               id="parish-search" 
+                               placeholder="Search parishes by name..." 
+                               autocomplete="off"
+                               aria-describedby="search-label"
+                               role="combobox"
+                               aria-expanded="false"
+                               aria-controls="parish-autocomplete"
+                               aria-autocomplete="list">
+                        <div class="autocomplete-dropdown" 
+                             id="parish-autocomplete" 
+                             role="listbox"
+                             aria-label="Parish suggestions"></div>
+                    </div>
+                    
+                    <!-- Address Search -->
+                    <div class="search-container">
+                        <label for="address-search" class="visually-hidden">Search by address</label>
+                        <input type="text" 
+                               class="search-input" 
+                               id="address-search" 
+                               placeholder="Enter address, press Enter to search" 
+                               autocomplete="off"
+                               aria-describedby="search-label">
+                        <button class="search-btn" 
+                                id="address-search-btn" 
+                                title="Search address"
+                                aria-label="Search address">
+                            <span aria-hidden="true">⏎</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Address Result -->
+                    <div class="address-result" 
+                         id="address-result" 
+                         role="status" 
+                         aria-live="polite">
+                        <div class="address-result-title">Your Parish</div>
+                        <div class="address-result-parish" id="result-parish-name"></div>
+                        <div class="address-result-info" id="result-parish-info"></div>
+                    </div>
+                </div>
+                
+                <!-- Language Filter -->
+                <div class="filter-section">
+                    <div class="filter-title" id="filter-label">Filter by Language</div>
+                    <div class="filter-row" 
+                         id="origin-filters" 
+                         role="group" 
+                         aria-labelledby="filter-label">
+                        <button class="filter-chip active" 
+                                data-origin="all" 
+                                role="button"
+                                aria-pressed="true">All</button>
+                        <button class="filter-chip" 
+                                data-origin="German" 
+                                role="button"
+                                aria-pressed="false">German</button>
+                        <button class="filter-chip" 
+                                data-origin="Polish" 
+                                role="button"
+                                aria-pressed="false">Polish</button>
+                        <button class="filter-chip" 
+                                data-origin="Italian" 
+                                role="button"
+                                aria-pressed="false">Italian</button>
+                        <button class="filter-chip" 
+                                data-origin="Slovak" 
+                                role="button"
+                                aria-pressed="false">Slovak</button>
+                        <button class="filter-chip" 
+                                data-origin="French" 
+                                role="button"
+                                aria-pressed="false">French</button>
+                        <button class="filter-chip" 
+                                data-origin="Lithuanian" 
+                                role="button"
+                                aria-pressed="false">Lithuanian</button>
+                    </div>
+                </div>
+                
+                <!-- Timeline Control -->
+                <div class="timeline-control">
+                    <div class="timeline-title" id="timeline-label">Timeline Filter</div>
+                    
+                    <div class="year-display">
+                        <div>
+                            <div class="year-label">From</div>
+                            <div class="year-value" id="year-start" aria-live="polite">1822</div>
+                        </div>
+                        <div class="year-separator" aria-hidden="true"></div>
+                        <div>
+                            <div class="year-label">To</div>
+                            <div class="year-value" id="year-end" aria-live="polite">2025</div>
+                        </div>
+                    </div>
+                    
+                    <div class="slider-container" 
+                         id="slider-container"
+                         role="group"
+                         aria-labelledby="timeline-label">
+                        <div class="slider-track" aria-hidden="true"></div>
+                        <div class="slider-range" id="slider-range" aria-hidden="true"></div>
+                        <div class="slider-thumb" 
+                             id="thumb-start" 
+                             data-thumb="start"
+                             role="slider"
+                             tabindex="0"
+                             aria-label="Start year"
+                             aria-valuemin="1822"
+                             aria-valuemax="2025"
+                             aria-valuenow="1822"></div>
+                        <div class="slider-thumb" 
+                             id="thumb-end" 
+                             data-thumb="end"
+                             role="slider"
+                             tabindex="0"
+                             aria-label="End year"
+                             aria-valuemin="1822"
+                             aria-valuemax="2025"
+                             aria-valuenow="2025"></div>
+                    </div>
+                    
+                    <div class="year-ticks" aria-hidden="true">
+                        <span class="year-tick">1822</span>
+                        <span class="year-tick">1875</span>
+                        <span class="year-tick">1925</span>
+                        <span class="year-tick">1975</span>
+                        <span class="year-tick">2025</span>
+                    </div>
+                    
+                    <div class="stats-panel" role="status" aria-live="polite">
+                        <div class="stat-box">
+                            <div class="stat-number" id="active-count">0</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="closed-count">0</div>
+                            <div class="stat-label">Closed</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parish-list" 
+                     id="parish-list" 
+                     role="list"
+                     aria-label="List of parishes">
+                    <div class="list-header">Parishes in Selected Period</div>
+                </div>
+            </aside>
+            
+            <div class="map-container">
+                <div id="map" 
+                     role="application" 
+                     aria-label="Interactive map of Brooklyn Catholic parishes"></div>
+                
+                <div class="map-legend" role="region" aria-label="Map legend">
+                    <div class="legend-title">Legend</div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #d4a853;" aria-hidden="true"></div>
+                        <span>Active Parish</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #6b7280;" aria-hidden="true"></div>
+                        <span>Closed/Merged</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #ef4444;" aria-hidden="true"></div>
+                        <span>Search Location</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line" style="background: rgba(212, 168, 83, 0.4);" aria-hidden="true"></div>
+                        <span>Boundary</span>
+                    </div>
+                    <div class="toggle-boundaries">
+                        <button class="toggle-btn active" 
+                                id="toggle-boundaries"
+                                aria-pressed="true">
+                            Show Boundaries
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="anonymous"></script>
+    <!-- Turf.js for geospatial operations -->
+    <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"
+            integrity="sha256-GM4+BRGX8qFpHs0J1cG/UvEqH1zHSLwCPkkKPkPZRXg="
+            crossorigin="anonymous"></script>
+    
+    <!-- Application JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>
+
