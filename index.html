@@ -745,14 +745,396 @@
             filter: brightness(0.8) contrast(1.1) saturate(0.8);
         }
         
-        @media (max-width: 900px) {
+        /* Mobile toggle button */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            background: var(--accent-gold);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 30px;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-toggle:hover {
+            background: var(--accent-gold-light);
+            transform: translateX(-50%) scale(1.05);
+        }
+        
+        .mobile-toggle::before {
+            content: '☰ ';
+        }
+        
+        .mobile-toggle.showing-controls::before {
+            content: '🗺️ ';
+        }
+        
+        /* Tablet styles */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 320px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            header {
+                padding: 1rem 1.5rem;
+            }
+            
+            header::after {
+                font-size: 3rem;
+                right: 1.5rem;
+            }
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .app-container {
+                height: 100vh;
+                height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            }
+            
+            header {
+                padding: 0.75rem 1rem;
+                text-align: center;
+            }
+            
+            header::after {
+                display: none;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+                margin-bottom: 0.15rem;
+            }
+            
+            .subtitle {
+                font-size: 0.75rem;
+            }
+            
+            .subtitle:last-child {
+                display: none; /* Hide data source on mobile */
+            }
+            
             .main-content {
                 flex-direction: column;
+                position: relative;
             }
             
             .sidebar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 width: 100%;
-                max-height: 50vh;
+                max-height: none;
+                height: 100%;
+                z-index: 1000;
+                transform: translateY(100%);
+                transition: transform 0.3s ease;
+                border-right: none;
+                overflow-y: auto;
+            }
+            
+            .sidebar.mobile-visible {
+                transform: translateY(0);
+            }
+            
+            .map-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 100%;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+            
+            /* Compact search section */
+            .search-section {
+                padding: 0.75rem 1rem;
+            }
+            
+            .search-title {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .search-container {
+                margin-bottom: 0.5rem;
+            }
+            
+            .search-input {
+                padding: 0.5rem 2.5rem 0.5rem 0.6rem;
+                font-size: 16px; /* Prevents iOS zoom */
+            }
+            
+            /* Compact filter section */
+            .filter-section {
+                padding: 0.75rem 1rem;
+            }
+            
+            .filter-title {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .filter-chip {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.7rem;
+            }
+            
+            /* Compact timeline */
+            .timeline-control {
+                padding: 0.75rem 1rem;
+            }
+            
+            .timeline-title {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .year-display {
+                padding: 0.5rem 0.6rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .year-value {
+                font-size: 1.1rem;
+            }
+            
+            .year-label {
+                font-size: 0.6rem;
+            }
+            
+            /* Larger touch targets for slider */
+            .slider-container {
+                height: 50px;
+                margin: 0.5rem 0;
+            }
+            
+            .slider-thumb {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .slider-thumb:hover {
+                transform: translate(-50%, -50%); /* No scale on mobile */
+            }
+            
+            .slider-track {
+                height: 6px;
+            }
+            
+            .slider-range {
+                height: 6px;
+            }
+            
+            .year-ticks {
+                margin-top: 0.25rem;
+            }
+            
+            .year-tick {
+                font-size: 0.55rem;
+            }
+            
+            .stats-panel {
+                margin-top: 0.5rem;
+                gap: 0.4rem;
+            }
+            
+            .stat-box {
+                padding: 0.4rem;
+            }
+            
+            .stat-number {
+                font-size: 1.25rem;
+            }
+            
+            .stat-label {
+                font-size: 0.6rem;
+            }
+            
+            /* Parish list */
+            .parish-list {
+                padding: 0.5rem;
+                padding-bottom: 5rem; /* Space for mobile toggle */
+            }
+            
+            .list-header {
+                font-size: 0.8rem;
+                margin-bottom: 0.4rem;
+                padding-bottom: 0.3rem;
+            }
+            
+            .parish-item {
+                padding: 0.5rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .parish-name {
+                font-size: 0.8rem;
+            }
+            
+            .parish-meta {
+                font-size: 0.65rem;
+            }
+            
+            .parish-badge {
+                font-size: 0.6rem;
+                padding: 0.1rem 0.35rem;
+            }
+            
+            /* Map legend - move to top left and make smaller */
+            .map-legend {
+                bottom: auto;
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.5rem;
+                min-width: 130px;
+                font-size: 0.7rem;
+                opacity: 0.95;
+            }
+            
+            .legend-title {
+                font-size: 0.7rem;
+                margin-bottom: 0.35rem;
+                padding-bottom: 0.25rem;
+            }
+            
+            .legend-item {
+                margin-bottom: 0.25rem;
+                font-size: 0.65rem;
+            }
+            
+            .legend-dot {
+                width: 8px;
+                height: 8px;
+            }
+            
+            .toggle-boundaries {
+                margin-top: 0.35rem;
+                padding-top: 0.35rem;
+            }
+            
+            .toggle-btn {
+                padding: 0.35rem;
+                font-size: 0.65rem;
+            }
+            
+            /* Address result compact */
+            .address-result {
+                margin-top: 0.5rem;
+                padding: 0.5rem;
+            }
+            
+            .address-result-title {
+                font-size: 0.65rem;
+            }
+            
+            .address-result-parish {
+                font-size: 0.9rem;
+            }
+            
+            .address-result-info {
+                font-size: 0.7rem;
+            }
+            
+            /* Popup adjustments */
+            .popup-content h3 {
+                font-size: 0.95rem;
+            }
+            
+            .popup-content p {
+                font-size: 0.8rem;
+            }
+            
+            /* Autocomplete */
+            .autocomplete-dropdown {
+                max-height: 150px;
+            }
+            
+            .autocomplete-item {
+                padding: 0.5rem 0.6rem;
+            }
+            
+            .autocomplete-name {
+                font-size: 0.8rem;
+            }
+            
+            .autocomplete-meta {
+                font-size: 0.65rem;
+            }
+        }
+        
+        /* Small mobile styles */
+        @media (max-width: 380px) {
+            h1 {
+                font-size: 1.1rem;
+            }
+            
+            .subtitle {
+                font-size: 0.65rem;
+            }
+            
+            .filter-chip {
+                padding: 0.3rem 0.5rem;
+                font-size: 0.65rem;
+            }
+            
+            .year-value {
+                font-size: 1rem;
+            }
+            
+            .map-legend {
+                min-width: 110px;
+                padding: 0.4rem;
+            }
+        }
+        
+        /* Landscape mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            header {
+                padding: 0.4rem 1rem;
+            }
+            
+            h1 {
+                font-size: 1.1rem;
+                margin-bottom: 0;
+            }
+            
+            .subtitle {
+                display: none;
+            }
+            
+            .sidebar {
+                overflow-y: auto;
+            }
+            
+            .search-section,
+            .filter-section,
+            .timeline-control {
+                padding: 0.5rem 1rem;
+            }
+            
+            .parish-list {
+                max-height: 30vh;
             }
         }
     </style>
@@ -857,6 +1239,9 @@
             
             <div class="map-container">
                 <div id="map"></div>
+                
+                <!-- Mobile Toggle Button -->
+                <button class="mobile-toggle" id="mobile-toggle">Show Controls</button>
                 
                 <div class="map-legend">
                     <div class="legend-title">Legend</div>
@@ -1699,10 +2084,41 @@
             updateMap();
         });
 
+        // ==================== MOBILE TOGGLE ====================
+        
+        function initMobileToggle() {
+            const mobileToggle = document.getElementById('mobile-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (!mobileToggle || !sidebar) return;
+            
+            mobileToggle.addEventListener('click', () => {
+                const isVisible = sidebar.classList.toggle('mobile-visible');
+                mobileToggle.classList.toggle('showing-controls', isVisible);
+                mobileToggle.textContent = isVisible ? 'Show Map' : 'Show Controls';
+                
+                // Invalidate map size when toggling (fixes rendering issues)
+                if (!isVisible && map) {
+                    setTimeout(() => map.invalidateSize(), 350);
+                }
+            });
+            
+            // Close sidebar when clicking on a parish item (on mobile)
+            document.getElementById('parish-list').addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && e.target.closest('.parish-item')) {
+                    sidebar.classList.remove('mobile-visible');
+                    mobileToggle.classList.remove('showing-controls');
+                    mobileToggle.textContent = 'Show Controls';
+                    setTimeout(() => map.invalidateSize(), 350);
+                }
+            });
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initMap();
             initSlider();
+            initMobileToggle();
         });
     </script>
 </body>
