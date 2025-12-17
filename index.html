@@ -273,6 +273,76 @@
             border-color: var(--accent-gold);
         }
         
+        .language-color-toggle {
+            width: 100%;
+            margin-top: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        
+        .language-color-toggle:hover {
+            background: rgba(212, 168, 83, 0.15);
+            color: var(--text-primary);
+            border-color: var(--accent-gold);
+        }
+        
+        .language-color-toggle.active {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2));
+            border-color: #4facfe;
+            color: var(--text-primary);
+        }
+        
+        .toggle-icon {
+            font-size: 0.9rem;
+        }
+        
+        /* Language color legend */
+        .language-legend {
+            display: none;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .language-legend.active {
+            display: block;
+        }
+        
+        .language-legend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.3rem 0.5rem;
+        }
+        
+        .language-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .language-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+        
         .timeline-control {
             padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--border-color);
@@ -530,6 +600,16 @@
             font-family: 'Source Sans 3', sans-serif;
         }
         
+        /* Remove focus outlines for mouse clicks, keep for keyboard navigation */
+        .leaflet-container *:focus {
+            outline: none;
+        }
+        
+        .leaflet-container *:focus-visible {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 2px;
+        }
+        
         .custom-popup .leaflet-popup-content-wrapper {
             background: var(--bg-card);
             color: var(--text-primary);
@@ -745,6 +825,63 @@
             filter: brightness(0.8) contrast(1.1) saturate(0.8);
         }
         
+        /* Dynamic parish labels - clean text with shadow */
+        .parish-label {
+            pointer-events: none;
+            max-width: 140px;
+        }
+        
+        .parish-label .label-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-gold);
+            display: block;
+            line-height: 1.25;
+            text-shadow: 
+                0 0 4px rgba(0, 0, 0, 0.9),
+                0 0 8px rgba(0, 0, 0, 0.8),
+                1px 1px 2px rgba(0, 0, 0, 0.9),
+                -1px -1px 2px rgba(0, 0, 0, 0.9);
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        
+        .parish-label .label-details {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 10px;
+            color: var(--text-secondary);
+            display: block;
+            margin-top: 2px;
+            line-height: 1.3;
+            text-shadow: 
+                0 0 3px rgba(0, 0, 0, 0.9),
+                0 0 6px rgba(0, 0, 0, 0.8),
+                1px 1px 2px rgba(0, 0, 0, 0.9);
+            white-space: normal;
+        }
+        
+        .parish-label .label-origin {
+            color: #7ba3d4;
+        }
+        
+        .parish-label.label-minimal .label-name {
+            font-size: 11px;
+        }
+        
+        /* Closed parish label styling */
+        .parish-label.closed .label-name {
+            color: #9ca3af;
+        }
+        
+        /* Language-colored labels when in language mode */
+        .parish-label.lang-german .label-name { color: #4facfe; }
+        .parish-label.lang-polish .label-name { color: #f87171; }
+        .parish-label.lang-italian .label-name { color: #4ade80; }
+        .parish-label.lang-slovak .label-name { color: #c084fc; }
+        .parish-label.lang-french .label-name { color: #fbbf24; }
+        .parish-label.lang-lithuanian .label-name { color: #f472b6; }
+        
         /* Mobile toggle button */
         .mobile-toggle {
             display: none;
@@ -898,6 +1035,26 @@
             .filter-chip {
                 padding: 0.4rem 0.6rem;
                 font-size: 0.7rem;
+            }
+            
+            .language-color-toggle {
+                margin-top: 0.5rem;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+            
+            .language-legend {
+                margin-top: 0.4rem;
+                padding: 0.4rem;
+            }
+            
+            .language-legend-item {
+                font-size: 0.65rem;
+            }
+            
+            .language-legend-dot {
+                width: 8px;
+                height: 8px;
             }
             
             /* Compact timeline */
@@ -1187,6 +1344,41 @@
                         <div class="filter-chip" data-origin="French">French</div>
                         <div class="filter-chip" data-origin="Lithuanian">Lithuanian</div>
                     </div>
+                    <button class="language-color-toggle" id="language-color-toggle">
+                        <span class="toggle-icon">🎨</span> Show Language Colors
+                    </button>
+                    <div class="language-legend" id="language-legend">
+                        <div class="language-legend-grid">
+                            <div class="language-legend-item">
+                                <div class="language-legend-dot" style="background: #4facfe;"></div>
+                                <span>German</span>
+                            </div>
+                            <div class="language-legend-item">
+                                <div class="language-legend-dot" style="background: #dc2626;"></div>
+                                <span>Polish</span>
+                            </div>
+                            <div class="language-legend-item">
+                                <div class="language-legend-dot" style="background: #16a34a;"></div>
+                                <span>Italian</span>
+                            </div>
+                            <div class="language-legend-item">
+                                <div class="language-legend-dot" style="background: #9333ea;"></div>
+                                <span>Slovak</span>
+                            </div>
+                            <div class="language-legend-item">
+                                <div class="language-legend-dot" style="background: #f59e0b;"></div>
+                                <span>French</span>
+                            </div>
+                            <div class="language-legend-item">
+                                <div class="language-legend-dot" style="background: #ec4899;"></div>
+                                <span>Lithuanian</span>
+                            </div>
+                            <div class="language-legend-item">
+                                <div class="language-legend-dot" style="background: #6b7280;"></div>
+                                <span>Territorial</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Timeline Control -->
@@ -1245,21 +1437,23 @@
                 
                 <div class="map-legend">
                     <div class="legend-title">Legend</div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #d4a853;"></div>
-                        <span>Active Parish</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #6b7280;"></div>
-                        <span>Closed/Merged</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: #ef4444;"></div>
-                        <span>Search Location</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-line" style="background: rgba(212, 168, 83, 0.4);"></div>
-                        <span>Boundary</span>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #d4a853;"></div>
+                            <span>Active Parish</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #6b7280;"></div>
+                            <span>Closed/Merged</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #ef4444;"></div>
+                            <span>Search Location</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line" style="background: rgba(212, 168, 83, 0.4);"></div>
+                            <span>Boundary</span>
+                        </div>
                     </div>
                     <div class="toggle-boundaries">
                         <button class="toggle-btn active" id="toggle-boundaries">
@@ -1428,53 +1622,91 @@
             { id: 134, name: "Visitation of the B.V.M.", address: "98 Richards Street", est: 1854, closed: null, origin: null, lat: 40.6797, lng: -74.0077 }
         ];
 
-        // Kings County (Brooklyn) boundary - accurate coastline following land/water borders
-        // Extended to include waterfront neighborhoods like Brooklyn Heights, Carroll Gardens
+        // Kings County (Brooklyn) boundary - accurate GeoJSON from geojson.io
         const kingsCountyBoundary = {
             "type": "Feature",
-            "properties": { "name": "Kings County" },
+            "properties": { "name": "Brooklyn" },
             "geometry": {
                 "type": "Polygon",
                 "coordinates": [[
-                    // Starting from northwest (Greenpoint) going clockwise
-                    [-73.9615, 40.7310], // Greenpoint north at East River
-                    [-73.9420, 40.7320], // Newtown Creek mouth
-                    [-73.9280, 40.7285], // East of Greenpoint (Queens border)
-                    [-73.9120, 40.7140], // Maspeth border
-                    [-73.8950, 40.7010], // Ridgewood border
-                    [-73.8820, 40.6945], // Cemetery area
-                    [-73.8640, 40.6895], // Highland Park
-                    [-73.8550, 40.6790], // City Line
-                    [-73.8510, 40.6530], // East New York
-                    [-73.8550, 40.6370], // Spring Creek
-                    [-73.8460, 40.6230], // Jamaica Bay north shore
-                    [-73.8590, 40.6095], // Canarsie Pier area
-                    [-73.8750, 40.5920], // Dead Horse Bay
-                    [-73.8950, 40.5810], // Floyd Bennett Field
-                    [-73.9210, 40.5760], // Marine Park
-                    [-73.9350, 40.5740], // Gerritsen Beach
-                    [-73.9480, 40.5785], // Sheepshead Bay entrance
-                    [-73.9580, 40.5745], // Manhattan Beach
-                    [-73.9700, 40.5740], // Brighton Beach
-                    [-73.9850, 40.5735], // Coney Island east
-                    [-74.0030, 40.5720], // Coney Island west
-                    [-74.0180, 40.5790], // Sea Gate
-                    [-74.0420, 40.5980], // Gravesend Bay
-                    [-74.0450, 40.6150], // Fort Hamilton
-                    [-74.0460, 40.6400], // Bay Ridge waterfront
-                    [-74.0420, 40.6600], // Sunset Park waterfront
-                    [-74.0380, 40.6750], // Red Hook waterfront
-                    [-74.0220, 40.6850], // Buttermilk Channel / Red Hook
-                    [-74.0150, 40.6900], // Atlantic Basin
-                    [-74.0080, 40.6940], // Carroll Gardens waterfront
-                    [-74.0030, 40.6970], // Columbia St Waterfront
-                    [-73.9990, 40.7000], // Brooklyn Heights Promenade
-                    [-73.9960, 40.7040], // Brooklyn Bridge Park
-                    [-73.9920, 40.7080], // DUMBO waterfront
-                    [-73.9870, 40.7120], // Brooklyn Navy Yard south
-                    [-73.9750, 40.7160], // Navy Yard
-                    [-73.9680, 40.7220], // Williamsburg waterfront
-                    [-73.9615, 40.7310]  // Back to start
+                    [-73.962885, 40.7362103],
+                    [-73.9612307, 40.7277172],
+                    [-73.9656939, 40.7210823],
+                    [-73.9691271, 40.7124951],
+                    [-73.9789118, 40.7062492],
+                    [-73.9972796, 40.7037766],
+                    [-74.0094675, 40.6864664],
+                    [-74.0199389, 40.6799577],
+                    [-74.0175356, 40.6614693],
+                    [-74.0297236, 40.6492278],
+                    [-74.0345301, 40.6445389],
+                    [-74.0407099, 40.6342483],
+                    [-74.0427698, 40.6167897],
+                    [-74.0309252, 40.6038883],
+                    [-74.0115274, 40.6012817],
+                    [-74.0007128, 40.592679],
+                    [-74.0012278, 40.5847271],
+                    [-73.9984812, 40.5817285],
+                    [-74.0099825, 40.5823804],
+                    [-74.0139307, 40.5766438],
+                    [-74.0027727, 40.5698635],
+                    [-73.9308466, 40.5759919],
+                    [-73.9332499, 40.5831626],
+                    [-73.9232935, 40.583293],
+                    [-73.9160837, 40.5810767],
+                    [-73.9114489, 40.5818589],
+                    [-73.9117922, 40.5864218],
+                    [-73.8989176, 40.587204],
+                    [-73.8959993, 40.5770349],
+                    [-73.8848414, 40.572993],
+                    [-73.8503374, 40.5895505],
+                    [-73.8314547, 40.6140533],
+                    [-73.8324846, 40.6276042],
+                    [-73.8474192, 40.6432364],
+                    [-73.8532557, 40.6419338],
+                    [-73.8558306, 40.6500092],
+                    [-73.8641798, 40.6573728],
+                    [-73.8613473, 40.6582843],
+                    [-73.8617336, 40.659847],
+                    [-73.8583862, 40.6614096],
+                    [-73.858987, 40.6628095],
+                    [-73.8568841, 40.6630699],
+                    [-73.8589441, 40.6717937],
+                    [-73.8596307, 40.6749835],
+                    [-73.862034, 40.6747231],
+                    [-73.8642656, 40.6833152],
+                    [-73.865553, 40.6828596],
+                    [-73.8685571, 40.6947045],
+                    [-73.8823759, 40.6916459],
+                    [-73.8849508, 40.687741],
+                    [-73.8900148, 40.6850725],
+                    [-73.8935338, 40.6833152],
+                    [-73.8941347, 40.6848122],
+                    [-73.8956796, 40.6837057],
+                    [-73.9015161, 40.6914506],
+                    [-73.9062368, 40.6943141],
+                    [-73.9045202, 40.6960711],
+                    [-73.911215, 40.69952],
+                    [-73.9100992, 40.700431],
+                    [-73.9122449, 40.7017324],
+                    [-73.9110433, 40.7029687],
+                    [-73.9194547, 40.7077836],
+                    [-73.9236604, 40.7135089],
+                    [-73.9243471, 40.7153956],
+                    [-73.9227163, 40.7160462],
+                    [-73.9242612, 40.7191687],
+                    [-73.9266645, 40.7249582],
+                    [-73.9289819, 40.7277551],
+                    [-73.9343034, 40.7286007],
+                    [-73.9372217, 40.7295113],
+                    [-73.9395391, 40.7310723],
+                    [-73.9402257, 40.7331536],
+                    [-73.941599, 40.7351697],
+                    [-73.9449464, 40.7367306],
+                    [-73.9510404, 40.7388767],
+                    [-73.9538728, 40.739397],
+                    [-73.9574777, 40.7391369],
+                    [-73.962885, 40.7362103]
                 ]]
             }
         };
@@ -1484,12 +1716,25 @@
         let markersLayer;
         let voronoiLayer;
         let searchMarkerLayer;
+        let labelsLayer;
         let currentVoronoiFeatures = null;
         let yearStart = 1822;
         let yearEnd = 2025;
         let showBoundaries = true;
         let selectedOrigin = 'all';
         let addressSearchTimeout = null;
+        let showLanguageColors = false;
+        
+        // Language/origin color palette
+        const LANGUAGE_COLORS = {
+            'German': '#4facfe',      // Blue
+            'Polish': '#dc2626',      // Red
+            'Italian': '#16a34a',     // Green
+            'Slovak': '#9333ea',      // Purple
+            'French': '#f59e0b',      // Amber/Orange
+            'Lithuanian': '#ec4899',  // Pink
+            null: '#6b7280'           // Gray for territorial parishes
+        };
         
         const MIN_YEAR = 1822;
         const MAX_YEAR = 2025;
@@ -1511,6 +1756,11 @@
             markersLayer = L.layerGroup().addTo(map);
             voronoiLayer = L.layerGroup().addTo(map);
             searchMarkerLayer = L.layerGroup().addTo(map);
+            labelsLayer = L.layerGroup().addTo(map);
+            
+            // Add zoom event listener for dynamic labels
+            map.on('zoomend', updateLabels);
+            map.on('moveend', updateLabels);
             
             // Draw county boundary (subtle)
             L.geoJSON(kingsCountyBoundary, {
@@ -1544,14 +1794,124 @@
 
         // Create Voronoi boundaries clipped to Kings County
         function createVoronoiBoundaries(activeParishes) {
-            if (activeParishes.length < 3) return null;
+            if (activeParishes.length === 0) return null;
             
+            // Special case: 1 parish - entire county belongs to it
+            if (activeParishes.length === 1) {
+                const parish = activeParishes[0];
+                const feature = JSON.parse(JSON.stringify(kingsCountyBoundary)); // Deep clone
+                feature.properties = {
+                    id: parish.id,
+                    name: parish.name,
+                    parish: parish
+                };
+                return turf.featureCollection([feature]);
+            }
+            
+            // Special case: 2 parishes - split county with perpendicular bisector
+            if (activeParishes.length === 2) {
+                try {
+                    const p1 = activeParishes[0];
+                    const p2 = activeParishes[1];
+                    
+                    // Calculate midpoint between the two parishes
+                    const midLng = (p1.lng + p2.lng) / 2;
+                    const midLat = (p1.lat + p2.lat) / 2;
+                    
+                    // Calculate perpendicular direction (rotate 90 degrees)
+                    const dx = p2.lng - p1.lng;
+                    const dy = p2.lat - p1.lat;
+                    
+                    // Create a very long line perpendicular to the line between parishes
+                    const lineLength = 0.5; // degrees - long enough to cross the county
+                    const perpLng = -dy;
+                    const perpLat = dx;
+                    const len = Math.sqrt(perpLng * perpLng + perpLat * perpLat);
+                    const normLng = perpLng / len * lineLength;
+                    const normLat = perpLat / len * lineLength;
+                    
+                    // Create dividing line
+                    const dividingLine = turf.lineString([
+                        [midLng - normLng, midLat - normLat],
+                        [midLng + normLng, midLat + normLat]
+                    ]);
+                    
+                    // Split the county using the dividing line
+                    const split = turf.lineSplit(turf.polygonToLine(kingsCountyBoundary), dividingLine);
+                    
+                    if (split && split.features && split.features.length >= 2) {
+                        // Convert split lines back to polygons
+                        const clippedFeatures = [];
+                        
+                        // Create two half-planes and intersect with county
+                        const bbox = [-74.1, 40.5, -73.8, 40.8];
+                        
+                        // Half-plane 1 (side of parish 1)
+                        const halfPlane1 = turf.polygon([[
+                            [midLng - normLng, midLat - normLat],
+                            [midLng + normLng, midLat + normLat],
+                            [midLng + normLng + dy * 0.5, midLat + normLat - dx * 0.5],
+                            [midLng - normLng + dy * 0.5, midLat - normLat - dx * 0.5],
+                            [midLng - normLng, midLat - normLat]
+                        ]]);
+                        
+                        const halfPlane2 = turf.polygon([[
+                            [midLng - normLng, midLat - normLat],
+                            [midLng + normLng, midLat + normLat],
+                            [midLng + normLng - dy * 0.5, midLat + normLat + dx * 0.5],
+                            [midLng - normLng - dy * 0.5, midLat - normLat + dx * 0.5],
+                            [midLng - normLng, midLat - normLat]
+                        ]]);
+                        
+                        // Determine which half-plane each parish is in
+                        const point1 = turf.point([p1.lng, p1.lat]);
+                        const inHalf1 = turf.booleanPointInPolygon(point1, halfPlane1);
+                        
+                        const parish1HalfPlane = inHalf1 ? halfPlane1 : halfPlane2;
+                        const parish2HalfPlane = inHalf1 ? halfPlane2 : halfPlane1;
+                        
+                        // Intersect half-planes with county boundary
+                        const region1 = turf.intersect(kingsCountyBoundary, parish1HalfPlane);
+                        const region2 = turf.intersect(kingsCountyBoundary, parish2HalfPlane);
+                        
+                        if (region1) {
+                            region1.properties = { id: p1.id, name: p1.name, parish: p1 };
+                            clippedFeatures.push(region1);
+                        }
+                        if (region2) {
+                            region2.properties = { id: p2.id, name: p2.name, parish: p2 };
+                            clippedFeatures.push(region2);
+                        }
+                        
+                        if (clippedFeatures.length > 0) {
+                            return turf.featureCollection(clippedFeatures);
+                        }
+                    }
+                    
+                    // Fallback: if split fails, just show county for both
+                    console.warn('2-parish split failed, falling back');
+                } catch (e) {
+                    console.warn('2-parish boundary error:', e);
+                }
+                
+                // Fallback for 2 parishes - show entire county (better than nothing)
+                const feature = JSON.parse(JSON.stringify(kingsCountyBoundary));
+                feature.properties = {
+                    id: activeParishes[0].id,
+                    name: activeParishes[0].name + ' & ' + activeParishes[1].name,
+                    parish: activeParishes[0]
+                };
+                return turf.featureCollection([feature]);
+            }
+            
+            // Standard case: 3+ parishes - use Voronoi
             const points = turf.featureCollection(
                 activeParishes.map(p => turf.point([p.lng, p.lat], { id: p.id, name: p.name }))
             );
             
-            // Create bounding box slightly larger than Kings County
-            const bbox = [-74.06, 40.56, -73.83, 40.74];
+            // Create bounding box larger than Kings County boundary
+            // Must fully contain the boundary polygon for proper clipping
+            const bbox = [-74.05, 40.56, -73.82, 40.75];
             
             try {
                 const voronoi = turf.voronoi(points, { bbox });
@@ -1620,8 +1980,8 @@
             
             const activeParishes = getFilteredParishes();
             
-            // Add Voronoi boundaries
-            if (showBoundaries && activeParishes.length >= 3) {
+            // Add Voronoi boundaries (works with 1+ parishes now)
+            if (showBoundaries && activeParishes.length >= 1) {
                 const voronoi = createVoronoiBoundaries(activeParishes);
                 currentVoronoiFeatures = voronoi;
                 
@@ -1644,6 +2004,17 @@
                         }
                     }).addTo(voronoiLayer);
                 }
+                
+                // Add county boundary outline
+                L.geoJSON(kingsCountyBoundary, {
+                    style: {
+                        fillColor: 'transparent',
+                        fillOpacity: 0,
+                        color: '#d4a853',
+                        weight: 2.5,
+                        opacity: 0.8
+                    }
+                }).addTo(voronoiLayer);
             } else {
                 currentVoronoiFeatures = null;
             }
@@ -1651,15 +2022,24 @@
             // Add markers
             activeParishes.forEach(parish => {
                 const isClosed = parish.closed && parish.closed <= yearEnd;
-                const markerColor = isClosed ? '#6b7280' : '#d4a853';
+                
+                // Determine marker color based on mode
+                let markerColor;
+                if (showLanguageColors) {
+                    // Use language-based colors
+                    markerColor = LANGUAGE_COLORS[parish.origin] || LANGUAGE_COLORS[null];
+                } else {
+                    // Use active/closed colors
+                    markerColor = isClosed ? '#6b7280' : '#d4a853';
+                }
                 
                 const marker = L.circleMarker([parish.lat, parish.lng], {
                     radius: 7,
                     fillColor: markerColor,
-                    color: '#16213e',
-                    weight: 2,
+                    color: showLanguageColors ? 'rgba(255,255,255,0.5)' : '#16213e',
+                    weight: showLanguageColors ? 1.5 : 2,
                     opacity: 1,
-                    fillOpacity: 0.9
+                    fillOpacity: showLanguageColors ? 0.85 : 0.9
                 });
                 
                 const popupContent = `
@@ -1688,6 +2068,201 @@
             
             // Update parish list
             updateParishList(activeParishes);
+            
+            // Update labels after a short delay to ensure markers are placed
+            setTimeout(updateLabels, 50);
+        }
+
+        // ==================== DYNAMIC LABELS ====================
+        
+        // Track current labels for collision detection
+        let currentLabelBounds = [];
+        
+        // Calculate parish priorities based on Voronoi cell areas
+        function getParishPriorities(parishes) {
+            const priorities = {};
+            
+            // Default priority by age (older = higher)
+            parishes.forEach((p, i) => {
+                priorities[p.id] = 10000 - p.est; // Older parishes get higher base priority
+            });
+            
+            // If we have Voronoi features, use area for priority
+            if (currentVoronoiFeatures && currentVoronoiFeatures.features) {
+                currentVoronoiFeatures.features.forEach(feature => {
+                    if (feature && feature.properties && feature.properties.id) {
+                        try {
+                            const area = turf.area(feature); // Area in square meters
+                            priorities[feature.properties.id] = area;
+                        } catch (e) {
+                            // Keep default priority
+                        }
+                    }
+                });
+            }
+            
+            return priorities;
+        }
+        
+        // Estimate label dimensions based on text
+        function estimateLabelSize(name, detailLevel) {
+            // Approximate character width
+            const charWidth = 6.5;
+            const maxWidth = 130;
+            
+            // Calculate wrapped text dimensions
+            const nameLength = name.length * charWidth;
+            const width = Math.min(nameLength + 10, maxWidth);
+            
+            // Height based on wrapping and detail level
+            const lines = Math.ceil(nameLength / maxWidth);
+            let height = lines * 15; // Base height for name
+            
+            if (detailLevel >= 2) height += 12; // Years
+            if (detailLevel >= 3) height += 10; // Origin
+            if (detailLevel >= 4) height += 12; // Address
+            
+            return { width, height: Math.max(height, 16) };
+        }
+        
+        function updateLabels() {
+            if (!labelsLayer || !map) return;
+            
+            labelsLayer.clearLayers();
+            currentLabelBounds = [];
+            
+            const zoom = map.getZoom();
+            const bounds = map.getBounds();
+            
+            // Only show labels at zoom 13+
+            if (zoom < 13) return;
+            
+            const activeParishes = getFilteredParishes();
+            
+            // Filter to visible parishes
+            const visibleParishes = activeParishes.filter(p => bounds.contains([p.lat, p.lng]));
+            
+            // Get priorities (larger catchment area = higher priority)
+            const priorities = getParishPriorities(visibleParishes);
+            
+            // Sort by priority (highest first)
+            visibleParishes.sort((a, b) => (priorities[b.id] || 0) - (priorities[a.id] || 0));
+            
+            // Determine detail level based on zoom
+            // 13-14: name only
+            // 15: name + years
+            // 16: name + years + origin  
+            // 17+: name + years + origin + address
+            const detailLevel = zoom <= 14 ? 1 : zoom === 15 ? 2 : zoom === 16 ? 3 : 4;
+            
+            // At lower zooms, be more aggressive about hiding collisions
+            const maxLabels = zoom <= 13 ? 15 : zoom === 14 ? 25 : zoom === 15 ? 40 : 100;
+            let labelCount = 0;
+            
+            visibleParishes.forEach(parish => {
+                if (labelCount >= maxLabels) return;
+                
+                const isClosed = parish.closed && parish.closed <= yearEnd;
+                
+                // Build label content
+                let labelClass = 'parish-label';
+                if (detailLevel === 1) labelClass += ' label-minimal';
+                if (isClosed) labelClass += ' closed';
+                if (showLanguageColors && parish.origin) {
+                    labelClass += ` lang-${parish.origin.toLowerCase()}`;
+                }
+                
+                // Name (always shown)
+                let labelHtml = `<span class="label-name">${escapeHtml(parish.name)}</span>`;
+                
+                // Additional details
+                if (detailLevel >= 2) {
+                    let details = [];
+                    
+                    // Years
+                    const years = parish.closed 
+                        ? `${parish.est}–${parish.closed}`
+                        : `${parish.est}–present`;
+                    details.push(years);
+                    
+                    // Origin (zoom 16+)
+                    if (detailLevel >= 3 && parish.origin) {
+                        details.push(`<span class="label-origin">${escapeHtml(parish.origin)}</span>`);
+                    }
+                    
+                    // Address (zoom 17+)
+                    if (detailLevel >= 4) {
+                        details.push(escapeHtml(parish.address));
+                    }
+                    
+                    if (details.length > 0) {
+                        labelHtml += `<span class="label-details">${details.join(' · ')}</span>`;
+                    }
+                }
+                
+                // Calculate label position
+                const point = map.latLngToContainerPoint([parish.lat, parish.lng]);
+                const labelSize = estimateLabelSize(parish.name, detailLevel);
+                
+                // Try positions: right, left, top-right, bottom-right
+                const offsets = [
+                    { x: 14, y: -labelSize.height / 2 },           // Right
+                    { x: -labelSize.width - 14, y: -labelSize.height / 2 }, // Left
+                    { x: 10, y: -labelSize.height - 8 },           // Top-right
+                    { x: 10, y: 10 },                               // Bottom-right
+                ];
+                
+                let bestOffset = null;
+                
+                for (const offset of offsets) {
+                    const labelBounds = {
+                        left: point.x + offset.x - 5,
+                        right: point.x + offset.x + labelSize.width + 5,
+                        top: point.y + offset.y - 3,
+                        bottom: point.y + offset.y + labelSize.height + 3
+                    };
+                    
+                    // Check collisions with existing labels AND markers
+                    let hasCollision = false;
+                    
+                    // Check label collisions
+                    for (const existing of currentLabelBounds) {
+                        if (!(labelBounds.right < existing.left - 4 || 
+                              labelBounds.left > existing.right + 4 || 
+                              labelBounds.bottom < existing.top - 4 || 
+                              labelBounds.top > existing.bottom + 4)) {
+                            hasCollision = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!hasCollision) {
+                        bestOffset = offset;
+                        currentLabelBounds.push(labelBounds);
+                        break;
+                    }
+                }
+                
+                // Skip if no valid position found
+                if (!bestOffset) return;
+                
+                // Create label
+                const labelIcon = L.divIcon({
+                    className: '',
+                    html: `<div class="${labelClass}">${labelHtml}</div>`,
+                    iconSize: [labelSize.width, labelSize.height],
+                    iconAnchor: [-bestOffset.x, -bestOffset.y]
+                });
+                
+                const labelMarker = L.marker([parish.lat, parish.lng], {
+                    icon: labelIcon,
+                    interactive: false,
+                    zIndexOffset: -1000
+                });
+                
+                labelMarker.addTo(labelsLayer);
+                labelCount++;
+            });
         }
 
         // Update parish list
@@ -2083,6 +2658,50 @@
             this.textContent = showBoundaries ? 'Show Boundaries' : 'Hide Boundaries';
             updateMap();
         });
+
+        // ==================== LANGUAGE COLOR TOGGLE ====================
+        
+        document.getElementById('language-color-toggle').addEventListener('click', function() {
+            showLanguageColors = !showLanguageColors;
+            this.classList.toggle('active', showLanguageColors);
+            this.innerHTML = showLanguageColors 
+                ? '<span class="toggle-icon">🎨</span> Hide Language Colors'
+                : '<span class="toggle-icon">🎨</span> Show Language Colors';
+            
+            // Show/hide the legend
+            document.getElementById('language-legend').classList.toggle('active', showLanguageColors);
+            
+            // Update the map legend text
+            updateMapLegend();
+            
+            updateMap();
+        });
+        
+        function updateMapLegend() {
+            const legendContainer = document.querySelector('.map-legend');
+            const legendItemsContainer = legendContainer.querySelector('.legend-items');
+            
+            if (showLanguageColors) {
+                // Show all language colors
+                legendItemsContainer.innerHTML = `
+                    <div class="legend-item"><div class="legend-dot" style="background: #4facfe;"></div><span>German</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #dc2626;"></div><span>Polish</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #16a34a;"></div><span>Italian</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #9333ea;"></div><span>Slovak</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div><span>French</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #ec4899;"></div><span>Lithuanian</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #6b7280;"></div><span>Territorial</span></div>
+                `;
+            } else {
+                // Restore original legend
+                legendItemsContainer.innerHTML = `
+                    <div class="legend-item"><div class="legend-dot" style="background: #d4a853;"></div><span>Active Parish</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #6b7280;"></div><span>Closed/Merged</span></div>
+                    <div class="legend-item"><div class="legend-dot" style="background: #ef4444;"></div><span>Search Location</span></div>
+                    <div class="legend-item"><div class="legend-line" style="background: rgba(212, 168, 83, 0.4);"></div><span>Boundary</span></div>
+                `;
+            }
+        }
 
         // ==================== MOBILE TOGGLE ====================
         
