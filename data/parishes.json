@@ -30,7 +30,7 @@
     { "id": 30, "name": "Our Lady of Guadalupe", "address": "7201 15th Avenue", "est": 1906, "closed": null, "origin": null, "lat": 40.6246, "lng": -74.0001 },
     { "id": 31, "name": "Our Lady of Loreto", "address": "124 Sackman Street", "est": 1894, "closed": null, "origin": null, "lat": 40.6720, "lng": -73.9012 },
     { "id": 32, "name": "Our Lady of Lourdes", "address": "11 DeSales Place", "est": 1872, "closed": null, "origin": null, "lat": 40.6798, "lng": -73.8821 },
-    { "id": 33, "name": "Our Lady of Mercy (old)", "address": "DeKalb and Debevoise Avenues", "est": 1857, "closed": 1930, "origin": null, "lat": 40.6984, "lng": -73.9366 },
+    { "id": 33, "name": "Our Lady of Mercy (old)", "address": "DeKalb and Debevoise Avenues", "est": 1857, "closed": 1930, "origin": null, "lat": 40.6901, "lng": -73.9841 },
     { "id": 34, "name": "Our Lady of Mercy", "address": "680 Mother Gaston Blvd.", "est": 1961, "closed": null, "origin": null, "lat": 40.6692, "lng": -73.9021 },
     { "id": 35, "name": "Our Lady of Miracles", "address": "757 East 86th Street", "est": 1936, "closed": null, "origin": null, "lat": 40.6133, "lng": -73.9189 },
     { "id": 36, "name": "Our Lady of Mount Carmel", "address": "275 North 8th Street", "est": 1887, "closed": null, "origin": "Italian", "lat": 40.7176, "lng": -73.9591 },

@@ -30,7 +30,7 @@ id,name,address,established,closed,origin,lat,lng,note
 30,Our Lady of Guadalupe,7201 15th Avenue,1906,,,40.6246,-74.0001,
 31,Our Lady of Loreto,124 Sackman Street,1894,,,40.6720,-73.9012,
 32,Our Lady of Lourdes,11 DeSales Place,1872,,,40.6798,-73.8821,
-33,Our Lady of Mercy (old),"DeKalb and Debevoise Avenues",1857,1930,,40.6984,-73.9366,
+33,Our Lady of Mercy (old),"DeKalb and Debevoise Avenues",1857,1930,,40.6901,-73.9841,
 34,Our Lady of Mercy,680 Mother Gaston Blvd.,1961,,,40.6692,-73.9021,
 35,Our Lady of Miracles,757 East 86th Street,1936,,,40.6133,-73.9189,
 36,Our Lady of Mount Carmel,275 North 8th Street,1887,,Italian,40.7176,-73.9591,
@@ -131,4 +131,5 @@ id,name,address,established,closed,origin,lat,lng,note
 132,St. Vincent Ferrer,1603 Brooklyn Avenue,1923,,,40.6531,-73.9321,
 133,Transfiguration,263 Marcy Avenue,1874,,,40.6984,-73.9519,
 134,Visitation of the B.V.M.,98 Richards Street,1854,,,40.6797,-74.0077,
+
 
